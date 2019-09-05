@@ -1347,8 +1347,12 @@ const (
 	OrderStatusShortSl  OrderStatus = "SHORT_SL"
 	OrderStatusLong50   OrderStatus = "LONG50"
 	OrderStatusLong100  OrderStatus = "LONG100"
+	OrderStatusLong150  OrderStatus = "LONG150"
+	OrderStatusLong200  OrderStatus = "LONG200"
 	OrderStatusShort50  OrderStatus = "SHORT50"
 	OrderStatusShort100 OrderStatus = "SHORT100"
+	OrderStatusShort150 OrderStatus = "SHORT150"
+	OrderStatusShort200 OrderStatus = "SHORT200"
 )
 
 type OrderOrderByInput string
