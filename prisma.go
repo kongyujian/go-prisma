@@ -61,7 +61,7 @@ func (client *Client) GraphQL(ctx context.Context, query string, variables map[s
 	return client.Client.GraphQL(ctx, query, variables)
 }
 
-var DefaultEndpoint = "http://prisma.royalek.com/algo/prod"
+var DefaultEndpoint = "https://prisma.royalek.fund/algo/prod"
 var Secret = os.Getenv("PRISMA_SECRET")
 
 func (client *Client) CompanyAccount(params CompanyAccountWhereUniqueInput) *CompanyAccountExec {
@@ -299,6 +299,85 @@ func (client *Client) OrdersConnection(params *OrdersConnectionParams) *OrderCon
 		[]string{"edges", "pageInfo"})
 
 	return &OrderConnectionExec{ret}
+}
+
+func (client *Client) Secret(params SecretWhereUniqueInput) *SecretExec {
+	ret := client.Client.GetOne(
+		nil,
+		params,
+		[2]string{"SecretWhereUniqueInput!", "Secret"},
+		"secret",
+		[]string{"id", "symbol", "timeframe", "market", "strategy", "key", "secret", "createdAt", "updatedAt"})
+
+	return &SecretExec{ret}
+}
+
+type SecretsParams struct {
+	Where   *SecretWhereInput   `json:"where,omitempty"`
+	OrderBy *SecretOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32              `json:"skip,omitempty"`
+	After   *string             `json:"after,omitempty"`
+	Before  *string             `json:"before,omitempty"`
+	First   *int32              `json:"first,omitempty"`
+	Last    *int32              `json:"last,omitempty"`
+}
+
+func (client *Client) Secrets(params *SecretsParams) *SecretExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"SecretWhereInput", "SecretOrderByInput", "Secret"},
+		"secrets",
+		[]string{"id", "symbol", "timeframe", "market", "strategy", "key", "secret", "createdAt", "updatedAt"})
+
+	return &SecretExecArray{ret}
+}
+
+type SecretsConnectionParams struct {
+	Where   *SecretWhereInput   `json:"where,omitempty"`
+	OrderBy *SecretOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32              `json:"skip,omitempty"`
+	After   *string             `json:"after,omitempty"`
+	Before  *string             `json:"before,omitempty"`
+	First   *int32              `json:"first,omitempty"`
+	Last    *int32              `json:"last,omitempty"`
+}
+
+func (client *Client) SecretsConnection(params *SecretsConnectionParams) *SecretConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"SecretWhereInput", "SecretOrderByInput", "Secret"},
+		"secretsConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &SecretConnectionExec{ret}
 }
 
 func (client *Client) Transaction(params TransactionWhereUniqueInput) *TransactionExec {
@@ -936,6 +1015,86 @@ func (client *Client) DeleteManyOrders(params *OrderWhereInput) *BatchPayloadExe
 	return &BatchPayloadExec{exec}
 }
 
+func (client *Client) CreateSecret(params SecretCreateInput) *SecretExec {
+	ret := client.Client.Create(
+		params,
+		[2]string{"SecretCreateInput!", "Secret"},
+		"createSecret",
+		[]string{"id", "symbol", "timeframe", "market", "strategy", "key", "secret", "createdAt", "updatedAt"})
+
+	return &SecretExec{ret}
+}
+
+type SecretUpdateParams struct {
+	Data  SecretUpdateInput      `json:"data"`
+	Where SecretWhereUniqueInput `json:"where"`
+}
+
+func (client *Client) UpdateSecret(params SecretUpdateParams) *SecretExec {
+	ret := client.Client.Update(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[3]string{"SecretUpdateInput!", "SecretWhereUniqueInput!", "Secret"},
+		"updateSecret",
+		[]string{"id", "symbol", "timeframe", "market", "strategy", "key", "secret", "createdAt", "updatedAt"})
+
+	return &SecretExec{ret}
+}
+
+type SecretUpdateManyParams struct {
+	Data  SecretUpdateManyMutationInput `json:"data"`
+	Where *SecretWhereInput             `json:"where,omitempty"`
+}
+
+func (client *Client) UpdateManySecrets(params SecretUpdateManyParams) *BatchPayloadExec {
+	exec := client.Client.UpdateMany(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[2]string{"SecretUpdateManyMutationInput!", "SecretWhereInput"},
+		"updateManySecrets")
+	return &BatchPayloadExec{exec}
+}
+
+type SecretUpsertParams struct {
+	Where  SecretWhereUniqueInput `json:"where"`
+	Create SecretCreateInput      `json:"create"`
+	Update SecretUpdateInput      `json:"update"`
+}
+
+func (client *Client) UpsertSecret(params SecretUpsertParams) *SecretExec {
+	uparams := &prisma.UpsertParams{
+		Where:  params.Where,
+		Create: params.Create,
+		Update: params.Update,
+	}
+	ret := client.Client.Upsert(
+		uparams,
+		[4]string{"SecretWhereUniqueInput!", "SecretCreateInput!", "SecretUpdateInput!", "Secret"},
+		"upsertSecret",
+		[]string{"id", "symbol", "timeframe", "market", "strategy", "key", "secret", "createdAt", "updatedAt"})
+
+	return &SecretExec{ret}
+}
+
+func (client *Client) DeleteSecret(params SecretWhereUniqueInput) *SecretExec {
+	ret := client.Client.Delete(
+		params,
+		[2]string{"SecretWhereUniqueInput!", "Secret"},
+		"deleteSecret",
+		[]string{"id", "symbol", "timeframe", "market", "strategy", "key", "secret", "createdAt", "updatedAt"})
+
+	return &SecretExec{ret}
+}
+
+func (client *Client) DeleteManySecrets(params *SecretWhereInput) *BatchPayloadExec {
+	exec := client.Client.DeleteMany(params, "SecretWhereInput", "deleteManySecrets")
+	return &BatchPayloadExec{exec}
+}
+
 func (client *Client) CreateTransaction(params TransactionCreateInput) *TransactionExec {
 	ret := client.Client.Create(
 		params,
@@ -1420,6 +1579,29 @@ const (
 	FileOrderByInputUrlDesc       FileOrderByInput = "url_DESC"
 )
 
+type SecretOrderByInput string
+
+const (
+	SecretOrderByInputIDAsc         SecretOrderByInput = "id_ASC"
+	SecretOrderByInputIDDesc        SecretOrderByInput = "id_DESC"
+	SecretOrderByInputSymbolAsc     SecretOrderByInput = "symbol_ASC"
+	SecretOrderByInputSymbolDesc    SecretOrderByInput = "symbol_DESC"
+	SecretOrderByInputTimeframeAsc  SecretOrderByInput = "timeframe_ASC"
+	SecretOrderByInputTimeframeDesc SecretOrderByInput = "timeframe_DESC"
+	SecretOrderByInputMarketAsc     SecretOrderByInput = "market_ASC"
+	SecretOrderByInputMarketDesc    SecretOrderByInput = "market_DESC"
+	SecretOrderByInputStrategyAsc   SecretOrderByInput = "strategy_ASC"
+	SecretOrderByInputStrategyDesc  SecretOrderByInput = "strategy_DESC"
+	SecretOrderByInputKeyAsc        SecretOrderByInput = "key_ASC"
+	SecretOrderByInputKeyDesc       SecretOrderByInput = "key_DESC"
+	SecretOrderByInputSecretAsc     SecretOrderByInput = "secret_ASC"
+	SecretOrderByInputSecretDesc    SecretOrderByInput = "secret_DESC"
+	SecretOrderByInputCreatedAtAsc  SecretOrderByInput = "createdAt_ASC"
+	SecretOrderByInputCreatedAtDesc SecretOrderByInput = "createdAt_DESC"
+	SecretOrderByInputUpdatedAtAsc  SecretOrderByInput = "updatedAt_ASC"
+	SecretOrderByInputUpdatedAtDesc SecretOrderByInput = "updatedAt_DESC"
+)
+
 type TransactionType string
 
 const (
@@ -1839,6 +2021,130 @@ type FileWhereInput struct {
 
 type OrderWhereUniqueInput struct {
 	ID *string `json:"id,omitempty"`
+}
+
+type SecretWhereUniqueInput struct {
+	ID *string `json:"id,omitempty"`
+}
+
+type SecretWhereInput struct {
+	ID                     *string            `json:"id,omitempty"`
+	IDNot                  *string            `json:"id_not,omitempty"`
+	IDIn                   []string           `json:"id_in,omitempty"`
+	IDNotIn                []string           `json:"id_not_in,omitempty"`
+	IDLt                   *string            `json:"id_lt,omitempty"`
+	IDLte                  *string            `json:"id_lte,omitempty"`
+	IDGt                   *string            `json:"id_gt,omitempty"`
+	IDGte                  *string            `json:"id_gte,omitempty"`
+	IDContains             *string            `json:"id_contains,omitempty"`
+	IDNotContains          *string            `json:"id_not_contains,omitempty"`
+	IDStartsWith           *string            `json:"id_starts_with,omitempty"`
+	IDNotStartsWith        *string            `json:"id_not_starts_with,omitempty"`
+	IDEndsWith             *string            `json:"id_ends_with,omitempty"`
+	IDNotEndsWith          *string            `json:"id_not_ends_with,omitempty"`
+	Symbol                 *string            `json:"symbol,omitempty"`
+	SymbolNot              *string            `json:"symbol_not,omitempty"`
+	SymbolIn               []string           `json:"symbol_in,omitempty"`
+	SymbolNotIn            []string           `json:"symbol_not_in,omitempty"`
+	SymbolLt               *string            `json:"symbol_lt,omitempty"`
+	SymbolLte              *string            `json:"symbol_lte,omitempty"`
+	SymbolGt               *string            `json:"symbol_gt,omitempty"`
+	SymbolGte              *string            `json:"symbol_gte,omitempty"`
+	SymbolContains         *string            `json:"symbol_contains,omitempty"`
+	SymbolNotContains      *string            `json:"symbol_not_contains,omitempty"`
+	SymbolStartsWith       *string            `json:"symbol_starts_with,omitempty"`
+	SymbolNotStartsWith    *string            `json:"symbol_not_starts_with,omitempty"`
+	SymbolEndsWith         *string            `json:"symbol_ends_with,omitempty"`
+	SymbolNotEndsWith      *string            `json:"symbol_not_ends_with,omitempty"`
+	Timeframe              *string            `json:"timeframe,omitempty"`
+	TimeframeNot           *string            `json:"timeframe_not,omitempty"`
+	TimeframeIn            []string           `json:"timeframe_in,omitempty"`
+	TimeframeNotIn         []string           `json:"timeframe_not_in,omitempty"`
+	TimeframeLt            *string            `json:"timeframe_lt,omitempty"`
+	TimeframeLte           *string            `json:"timeframe_lte,omitempty"`
+	TimeframeGt            *string            `json:"timeframe_gt,omitempty"`
+	TimeframeGte           *string            `json:"timeframe_gte,omitempty"`
+	TimeframeContains      *string            `json:"timeframe_contains,omitempty"`
+	TimeframeNotContains   *string            `json:"timeframe_not_contains,omitempty"`
+	TimeframeStartsWith    *string            `json:"timeframe_starts_with,omitempty"`
+	TimeframeNotStartsWith *string            `json:"timeframe_not_starts_with,omitempty"`
+	TimeframeEndsWith      *string            `json:"timeframe_ends_with,omitempty"`
+	TimeframeNotEndsWith   *string            `json:"timeframe_not_ends_with,omitempty"`
+	Market                 *string            `json:"market,omitempty"`
+	MarketNot              *string            `json:"market_not,omitempty"`
+	MarketIn               []string           `json:"market_in,omitempty"`
+	MarketNotIn            []string           `json:"market_not_in,omitempty"`
+	MarketLt               *string            `json:"market_lt,omitempty"`
+	MarketLte              *string            `json:"market_lte,omitempty"`
+	MarketGt               *string            `json:"market_gt,omitempty"`
+	MarketGte              *string            `json:"market_gte,omitempty"`
+	MarketContains         *string            `json:"market_contains,omitempty"`
+	MarketNotContains      *string            `json:"market_not_contains,omitempty"`
+	MarketStartsWith       *string            `json:"market_starts_with,omitempty"`
+	MarketNotStartsWith    *string            `json:"market_not_starts_with,omitempty"`
+	MarketEndsWith         *string            `json:"market_ends_with,omitempty"`
+	MarketNotEndsWith      *string            `json:"market_not_ends_with,omitempty"`
+	Strategy               *string            `json:"strategy,omitempty"`
+	StrategyNot            *string            `json:"strategy_not,omitempty"`
+	StrategyIn             []string           `json:"strategy_in,omitempty"`
+	StrategyNotIn          []string           `json:"strategy_not_in,omitempty"`
+	StrategyLt             *string            `json:"strategy_lt,omitempty"`
+	StrategyLte            *string            `json:"strategy_lte,omitempty"`
+	StrategyGt             *string            `json:"strategy_gt,omitempty"`
+	StrategyGte            *string            `json:"strategy_gte,omitempty"`
+	StrategyContains       *string            `json:"strategy_contains,omitempty"`
+	StrategyNotContains    *string            `json:"strategy_not_contains,omitempty"`
+	StrategyStartsWith     *string            `json:"strategy_starts_with,omitempty"`
+	StrategyNotStartsWith  *string            `json:"strategy_not_starts_with,omitempty"`
+	StrategyEndsWith       *string            `json:"strategy_ends_with,omitempty"`
+	StrategyNotEndsWith    *string            `json:"strategy_not_ends_with,omitempty"`
+	Key                    *string            `json:"key,omitempty"`
+	KeyNot                 *string            `json:"key_not,omitempty"`
+	KeyIn                  []string           `json:"key_in,omitempty"`
+	KeyNotIn               []string           `json:"key_not_in,omitempty"`
+	KeyLt                  *string            `json:"key_lt,omitempty"`
+	KeyLte                 *string            `json:"key_lte,omitempty"`
+	KeyGt                  *string            `json:"key_gt,omitempty"`
+	KeyGte                 *string            `json:"key_gte,omitempty"`
+	KeyContains            *string            `json:"key_contains,omitempty"`
+	KeyNotContains         *string            `json:"key_not_contains,omitempty"`
+	KeyStartsWith          *string            `json:"key_starts_with,omitempty"`
+	KeyNotStartsWith       *string            `json:"key_not_starts_with,omitempty"`
+	KeyEndsWith            *string            `json:"key_ends_with,omitempty"`
+	KeyNotEndsWith         *string            `json:"key_not_ends_with,omitempty"`
+	Secret                 *string            `json:"secret,omitempty"`
+	SecretNot              *string            `json:"secret_not,omitempty"`
+	SecretIn               []string           `json:"secret_in,omitempty"`
+	SecretNotIn            []string           `json:"secret_not_in,omitempty"`
+	SecretLt               *string            `json:"secret_lt,omitempty"`
+	SecretLte              *string            `json:"secret_lte,omitempty"`
+	SecretGt               *string            `json:"secret_gt,omitempty"`
+	SecretGte              *string            `json:"secret_gte,omitempty"`
+	SecretContains         *string            `json:"secret_contains,omitempty"`
+	SecretNotContains      *string            `json:"secret_not_contains,omitempty"`
+	SecretStartsWith       *string            `json:"secret_starts_with,omitempty"`
+	SecretNotStartsWith    *string            `json:"secret_not_starts_with,omitempty"`
+	SecretEndsWith         *string            `json:"secret_ends_with,omitempty"`
+	SecretNotEndsWith      *string            `json:"secret_not_ends_with,omitempty"`
+	CreatedAt              *string            `json:"createdAt,omitempty"`
+	CreatedAtNot           *string            `json:"createdAt_not,omitempty"`
+	CreatedAtIn            []string           `json:"createdAt_in,omitempty"`
+	CreatedAtNotIn         []string           `json:"createdAt_not_in,omitempty"`
+	CreatedAtLt            *string            `json:"createdAt_lt,omitempty"`
+	CreatedAtLte           *string            `json:"createdAt_lte,omitempty"`
+	CreatedAtGt            *string            `json:"createdAt_gt,omitempty"`
+	CreatedAtGte           *string            `json:"createdAt_gte,omitempty"`
+	UpdatedAt              *string            `json:"updatedAt,omitempty"`
+	UpdatedAtNot           *string            `json:"updatedAt_not,omitempty"`
+	UpdatedAtIn            []string           `json:"updatedAt_in,omitempty"`
+	UpdatedAtNotIn         []string           `json:"updatedAt_not_in,omitempty"`
+	UpdatedAtLt            *string            `json:"updatedAt_lt,omitempty"`
+	UpdatedAtLte           *string            `json:"updatedAt_lte,omitempty"`
+	UpdatedAtGt            *string            `json:"updatedAt_gt,omitempty"`
+	UpdatedAtGte           *string            `json:"updatedAt_gte,omitempty"`
+	And                    []SecretWhereInput `json:"AND,omitempty"`
+	Or                     []SecretWhereInput `json:"OR,omitempty"`
+	Not                    []SecretWhereInput `json:"NOT,omitempty"`
 }
 
 type TransactionWhereUniqueInput struct {
@@ -2525,6 +2831,34 @@ type OrderUpdateManyMutationInput struct {
 	Strategy  *string      `json:"strategy,omitempty"`
 }
 
+type SecretCreateInput struct {
+	ID        *string `json:"id,omitempty"`
+	Symbol    string  `json:"symbol"`
+	Timeframe string  `json:"timeframe"`
+	Market    string  `json:"market"`
+	Strategy  string  `json:"strategy"`
+	Key       string  `json:"key"`
+	Secret    string  `json:"secret"`
+}
+
+type SecretUpdateInput struct {
+	Symbol    *string `json:"symbol,omitempty"`
+	Timeframe *string `json:"timeframe,omitempty"`
+	Market    *string `json:"market,omitempty"`
+	Strategy  *string `json:"strategy,omitempty"`
+	Key       *string `json:"key,omitempty"`
+	Secret    *string `json:"secret,omitempty"`
+}
+
+type SecretUpdateManyMutationInput struct {
+	Symbol    *string `json:"symbol,omitempty"`
+	Timeframe *string `json:"timeframe,omitempty"`
+	Market    *string `json:"market,omitempty"`
+	Strategy  *string `json:"strategy,omitempty"`
+	Key       *string `json:"key,omitempty"`
+	Secret    *string `json:"secret,omitempty"`
+}
+
 type TransactionCreateInput struct {
 	ID       *string                  `json:"id,omitempty"`
 	Currency string                   `json:"currency"`
@@ -2922,6 +3256,17 @@ type OrderSubscriptionWhereInput struct {
 	And                        []OrderSubscriptionWhereInput `json:"AND,omitempty"`
 	Or                         []OrderSubscriptionWhereInput `json:"OR,omitempty"`
 	Not                        []OrderSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type SecretSubscriptionWhereInput struct {
+	MutationIn                 []MutationType                 `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                        `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                       `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                       `json:"updatedFields_contains_some,omitempty"`
+	Node                       *SecretWhereInput              `json:"node,omitempty"`
+	And                        []SecretSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []SecretSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []SecretSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
 type TransactionSubscriptionWhereInput struct {
@@ -3540,6 +3885,171 @@ func (instance OrderEdgeExecArray) Exec(ctx context.Context) ([]OrderEdge, error
 
 type OrderEdge struct {
 	Node   Order  `json:"node"`
+	Cursor string `json:"cursor"`
+}
+
+type SecretExec struct {
+	exec *prisma.Exec
+}
+
+func (instance SecretExec) Exec(ctx context.Context) (*Secret, error) {
+	var v Secret
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SecretExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SecretExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SecretExecArray) Exec(ctx context.Context) ([]Secret, error) {
+	var v []Secret
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type Secret struct {
+	ID        string  `json:"id"`
+	Symbol    string  `json:"symbol"`
+	Timeframe string  `json:"timeframe"`
+	Market    string  `json:"market"`
+	Strategy  string  `json:"strategy"`
+	Key       string  `json:"key"`
+	Secret    string  `json:"secret"`
+	CreatedAt *string `json:"createdAt,omitempty"`
+	UpdatedAt *string `json:"updatedAt,omitempty"`
+}
+
+type SecretConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *SecretConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *SecretConnectionExec) Edges() *SecretEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"SecretWhereInput", "SecretOrderByInput", "SecretEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetMany(
+		edges,
+		nil,
+		[3]string{"", "", "Secret"},
+		"node",
+		[]string{"id", "createdAt", "updatedAt", "name", "desc"})
+
+	return &SecretEdgeExecArray{nodes}
+}
+
+func (instance *SecretConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateSecret"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance SecretConnectionExec) Exec(ctx context.Context) (*SecretConnection, error) {
+	var v SecretConnection
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SecretConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SecretConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SecretConnectionExecArray) Exec(ctx context.Context) ([]SecretConnection, error) {
+	var v []SecretConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type SecretConnection struct {
+	PageInfo PageInfo     `json:"pageInfo"`
+	Edges    []SecretEdge `json:"edges"`
+}
+
+type SecretEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *SecretEdgeExec) Node() *SecretExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Secret"},
+		"node",
+		[]string{"id", "symbol", "timeframe", "market", "strategy", "key", "secret", "createdAt", "updatedAt"})
+
+	return &SecretExec{ret}
+}
+
+func (instance SecretEdgeExec) Exec(ctx context.Context) (*SecretEdge, error) {
+	var v SecretEdge
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SecretEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SecretEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SecretEdgeExecArray) Exec(ctx context.Context) ([]SecretEdge, error) {
+	var v []SecretEdge
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type SecretEdge struct {
+	Node   Secret `json:"node"`
 	Cursor string `json:"cursor"`
 }
 
@@ -4741,6 +5251,106 @@ type OrderPreviousValues struct {
 	Strategy  string      `json:"strategy"`
 	CreatedAt *string     `json:"createdAt,omitempty"`
 	UpdatedAt *string     `json:"updatedAt,omitempty"`
+}
+
+type SecretSubscriptionPayloadExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *SecretSubscriptionPayloadExec) Node() *SecretExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Secret"},
+		"node",
+		[]string{"id", "symbol", "timeframe", "market", "strategy", "key", "secret", "createdAt", "updatedAt"})
+
+	return &SecretExec{ret}
+}
+
+func (instance *SecretSubscriptionPayloadExec) PreviousValues() *SecretPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "SecretPreviousValues"},
+		"previousValues",
+		[]string{"id", "symbol", "timeframe", "market", "strategy", "key", "secret", "createdAt", "updatedAt"})
+
+	return &SecretPreviousValuesExec{ret}
+}
+
+func (instance SecretSubscriptionPayloadExec) Exec(ctx context.Context) (*SecretSubscriptionPayload, error) {
+	var v SecretSubscriptionPayload
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SecretSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SecretSubscriptionPayloadExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SecretSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]SecretSubscriptionPayload, error) {
+	var v []SecretSubscriptionPayload
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type SecretSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *Secret      `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type SecretPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance SecretPreviousValuesExec) Exec(ctx context.Context) (*SecretPreviousValues, error) {
+	var v SecretPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance SecretPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type SecretPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance SecretPreviousValuesExecArray) Exec(ctx context.Context) ([]SecretPreviousValues, error) {
+	var v []SecretPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type SecretPreviousValues struct {
+	ID        string  `json:"id"`
+	Symbol    string  `json:"symbol"`
+	Timeframe string  `json:"timeframe"`
+	Market    string  `json:"market"`
+	Strategy  string  `json:"strategy"`
+	Key       string  `json:"key"`
+	Secret    string  `json:"secret"`
+	CreatedAt *string `json:"createdAt,omitempty"`
+	UpdatedAt *string `json:"updatedAt,omitempty"`
 }
 
 type TransactionSubscriptionPayloadExec struct {
